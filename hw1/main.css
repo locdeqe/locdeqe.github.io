@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+:root {
+	font-family: 'Open Sans', sans-serif;
+}
+
+body {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.main-header {
+	color: #1946ba;
+}
+
+.quote {
+	border: 1px solid #F5F5F5;
+}
+
+.quote-title {
+	margin: 10px;
+}
+
+.quote-text {
+	border-left: 3px solid grey;
+    margin: 20px;
+    padding-left: 20px;
+}
+
+.button {
+	background: #ec0b43;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 10px;
+}
+
+.button:disabled {
+	opacity: .5;
+}
+
+.authorsList {
+	display: block;
+    margin: 10px 0;
+    width: 100%;
+}
