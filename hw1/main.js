@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function(){
 					allQuotes = quotesArrayPreporation(allQuotes);
 					authorsList = getAuthorsList(allQuotes);
 
-					console.log(allQuotes);
-
 					renderSelect();
 				}
 			}
