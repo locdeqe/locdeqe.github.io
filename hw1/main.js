@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function(){
 			});
 
 			for (let i = 0; i < quotesArray.length-1;) { //убираем дубли
-				debugger;
 				if (quotesArray[i].quoteText == quotesArray[i+1].quoteText) {
 					quotesArray.splice(i+1, 1);
 				} else {
@@ -82,15 +81,17 @@ document.addEventListener('DOMContentLoaded', function(){
 			let authorsListNode = document.createElement("select");
 			let welcomeString = document.createElement("option");
 			let authorIndex = 0;
+			
 			authorsListNode.className = "authorsList";
 			welcomeString.innerHTML = "Get a random quote";
 			welcomeString.selected = true;
 			authorsListNode.appendChild(welcomeString);
 			
-
 			for (let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
 				let currentBlock = document.createElement("optgroup");
+				
 				currentBlock.label = String.fromCharCode(i);
+				
 				while (authorIndex < authorsList.length && i == authorsList[authorIndex].charCodeAt(0)) {
 					let currentOption = document.createElement("option");
 					currentOption.innerHTML = authorsList[authorIndex];
