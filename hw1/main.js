@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function(){
 			let randomQuotes = allQuotes;
 
 			if (selectedAuthor) {
-				randomQuotes = allQuotes.filter( function(quote) { //убираем цитаты без автора
+				randomQuotes = allQuotes.filter( function(quote) { //получаем цитаты одного автора
 					return quote.quoteAuthor == selectedAuthor;
 				})
 			}
