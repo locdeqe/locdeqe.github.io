@@ -27,7 +27,7 @@ body {
     padding-left: 20px;
 }
 
-.button {
+.button, .button-sort {
 	background: #ec0b43;
     color: white;
     border: none;
