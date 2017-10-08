@@ -1,0 +1,29 @@
+:root{
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border: 1px solid #dad5d5;
+    border-collapse: collapse;
+}
+
+caption {
+    border: 1px solid #dad5d5;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid grey;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+tbody tr:nth-child(odd){
+    background: #dad5d5;
+}
+
+input {
+    margin: 0 5px;
+}

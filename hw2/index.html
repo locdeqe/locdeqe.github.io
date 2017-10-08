@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+</head>
+  <body>
+    <div class="checkboxes">
+        <span>Filter by:</span>
+        <input type="checkbox" name="Americas" value="Americas" title="Americas"><label for = "Americas">Americas</label>
+        <input type="checkbox" name="Africa" value="Africa" title="Africa"><label for = "Africa">Africa</label>
+        <input type="checkbox" name="Asia" value="Asia" title="Asia"><label for = "Asia">Asia</label>
+        <input type="checkbox" name="Europe" value="Europe" title="Europe"><label for = "Europe">Europe</label>
+        <input type="checkbox" name="Oceania" value="Oceania" title="Oceania"><label for = "Oceania">Oceania</label>
+    </div>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script>
+    d3.json("countries_2012.json", function(error, data){
+        
+     	var valueData = data.data.map(function(currentObj) {
+     		return newObj = {
+     			name: currentObj.name,
+     			continent: currentObj.continent,
+     			gdp: currentObj.gdp,
+     			life_expectancy: currentObj.life_expectancy,
+     			population: currentObj.population,
+     			year: currentObj.year
+     		}
+     	});
+        
+        var columns = Object.keys(valueData[0]);
+
+        var table = d3.select("body").append("table"),
+          thead = table.append("thead")
+                       .attr("class", "thead");
+          tbody = table.append("tbody");
+
+        table.append("caption")
+          .html("World Countries Ranking");
+
+        thead.append("tr").selectAll("th")
+          .data(columns)
+        .enter()
+          .append("th")
+          .text(function(d) { return d; })
+          .on("click", function(header, i) {
+            if (data.sorted == "toLower"+header) {
+                tbody.selectAll("tr").sort(function(a, b) {
+                    if (a[header] == b[header]) {
+                        return;
+                    }
+
+                    if ( parseFloat(a[header]) >= 0){
+                        return parseFloat(b[header]) - parseFloat(a[header]);
+                    }
+                    
+                    return b[header].localeCompare(a[header]);
+                    
+                });
+            
+                data.sorted = "toUpper"+header;
+            } else {
+                tbody.selectAll("tr").sort(function(a, b) {
+                    debugger;
+                    if (a[header] == b[header]) {
+                        return;
+                    }
+
+                    if ( parseFloat(a[header]) || a[header] == 0){
+                        return parseFloat(a[header]) - parseFloat(b[header]);
+                    }
+                    
+				    return a[header].localeCompare(b[header]);
+                });
+                data.sorted = "toLower"+header;
+            }
+          });
+
+        var rows = tbody.selectAll("tr.row")
+          .data(valueData)
+          .enter()
+          .append("tr").attr("class", "row");
+
+        var cells = rows.selectAll("td")
+          .data(function(row) {
+              return d3.range(Object.keys(row).length).map(function(column, i) {
+                  return makeFormating(Object.keys(row)[i], row[Object.keys(row)[i]]);
+              });
+          })
+          .enter()
+          .append("td")
+          .text(function(d) { return d; })
+          .on("mouseover", function(d, i) {
+
+            d3.select(this.parentNode)
+              .style("background-color", "#F3ED86");
+        
+          }).on("mouseout", function() {
+
+            tbody.selectAll("tr")
+              .style("background-color", null)
+              .selectAll("td")
+              .style("background-color", null);
+
+          });
+         
+        d3.selectAll(".checkboxes input").on("change", function(){
+                            
+            var checkedBoxes = [];
+            var filtredData = [];
+            
+            
+            d3.selectAll('input:checked').each(function(){
+                checkedBoxes.push(this.value);
+            });
+            
+            if (!checkedBoxes.length || checkedBoxes.length == 4) {
+                filtredData = data.data;
+            };
+            
+            data.data.forEach(function(current) {
+                if (checkedBoxes.indexOf(current['continent']) > -1 ) {
+                    filtredData.push(current);
+                }
+            });
+            
+
+            table.selectAll("tr")
+              .data(filtredData)
+              .selectAll("td")
+              .data(function(row) {
+                return columns.map(function(column) {
+                  return {
+                    column: column,
+                    value: row[column]
+                  };
+                });
+              })
+              .text(function(filtredData) {return filtredData.value;});
+                    })
+        
+         function makeFormating (name, value){
+            var formObj = {
+                gdp: function(val) {
+                    return d3.format(".2s")(val);
+                },
+                
+                life_expectancy: function(val) {
+                    return d3.format(".1f")(val);
+                },
+                
+                population: function(val) {
+                    return d3.format(",.3")(val);
+                }
+            }
+            
+            if (formObj[name]) {
+                return formObj[name](value);
+            }
+            
+            return value;
+         }
+      });
+    </script> 
+  </body>
+</html>
