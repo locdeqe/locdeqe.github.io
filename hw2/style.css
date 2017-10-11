@@ -20,6 +20,10 @@ td, th {
     text-align: center;
 }
 
+tbody tr:hover {
+    background: #F3ED86 !important;
+}
+
 tbody tr:nth-child(odd){
     background: #dad5d5;
 }

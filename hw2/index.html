@@ -18,33 +18,24 @@
     <script>
     d3.json("countries_2012.json", function(error, data){
         
-     	var valueData = data.data.map(function(currentObj) {
-     		return newObj = {
-     			name: currentObj.name,
-     			continent: currentObj.continent,
-     			gdp: currentObj.gdp,
-     			life_expectancy: currentObj.life_expectancy,
-     			population: currentObj.population,
-     			year: currentObj.year
-     		}
-     	});
+     	var valueData = data.data.map(getValuebleInfo);
         
         var columns = Object.keys(valueData[0]);
 
         var table = d3.select("body").append("table"),
-          thead = table.append("thead")
-                       .attr("class", "thead");
-          tbody = table.append("tbody");
+            thead = table.append("thead")
+                         .attr("class", "thead");
+            tbody = table.append("tbody");
 
         table.append("caption")
           .html("World Countries Ranking");
 
         thead.append("tr").selectAll("th")
-          .data(columns)
-        .enter()
-          .append("th")
-          .text(function(d) { return d; })
-          .on("click", function(header, i) {
+            .data(columns)
+            .enter()
+            .append("th")
+            .text(function(d) { return d; })
+            .on("click", function(header) {
             if (data.sorted == "toLower"+header) {
                 tbody.selectAll("tr").sort(function(a, b) {
                     if (a[header] == b[header]) {
@@ -76,37 +67,19 @@
                 data.sorted = "toLower"+header;
             }
           });
-
-        var rows = tbody.selectAll("tr.row")
+        
+        var rows = tbody.selectAll("tr")
           .data(valueData)
           .enter()
-          .append("tr").attr("class", "row");
+          .append("tr");
 
         var cells = rows.selectAll("td")
-          .data(function(row) {
-              return d3.range(Object.keys(row).length).map(function(column, i) {
-                  return makeFormating(Object.keys(row)[i], row[Object.keys(row)[i]]);
-              });
-          })
+          .data(getInfoFromRow)
           .enter()
           .append("td")
-          .text(function(d) { return d; })
-          .on("mouseover", function(d, i) {
-
-            d3.select(this.parentNode)
-              .style("background-color", "#F3ED86");
-        
-          }).on("mouseout", function() {
-
-            tbody.selectAll("tr")
-              .style("background-color", null)
-              .selectAll("td")
-              .style("background-color", null);
-
-          });
+          .text(function(d) { return d; });
          
-        d3.selectAll(".checkboxes input").on("change", function(){
-                            
+        d3.selectAll(".checkboxes input").on("change", function(){             
             var checkedBoxes = [];
             var filtredData = [];
             
@@ -116,31 +89,57 @@
             });
             
             if (!checkedBoxes.length || checkedBoxes.length == 4) {
-                filtredData = data.data;
-            };
-            
-            data.data.forEach(function(current) {
-                if (checkedBoxes.indexOf(current['continent']) > -1 ) {
-                    filtredData.push(current);
-                }
-            });
-            
-
-            table.selectAll("tr")
-              .data(filtredData)
-              .selectAll("td")
-              .data(function(row) {
-                return columns.map(function(column) {
-                  return {
-                    column: column,
-                    value: row[column]
-                  };
+                filtredData = data.data.slice();
+            } else {
+                data.data.forEach(function(current) {
+                    if (checkedBoxes.indexOf(current['continent']) > -1 ) {
+                        filtredData.push(current);
+                    }
                 });
-              })
-              .text(function(filtredData) {return filtredData.value;});
-                    })
+            } 
+           
+            console.log(filtredData);
+            filtredData = filtredData.map(getValuebleInfo);
+            
+            
+            var rows = d3.select("tbody").selectAll("tr").data(filtredData);
+            
+            var cells = rows.selectAll("td")
+                            .data(getInfoFromRow);
+            
+            cells.enter().append('td');
+            cells.text(function (d) {return d});
+            cells.exit().remove();
+            
+            var cells_in_new_rows = rows.enter().append('tr')
+                                .selectAll('td')
+                                .data(getInfoFromRow);
+
+            cells_in_new_rows.enter().append('td');
+            cells_in_new_rows.text(function (d) {return d});
+            
+            rows.exit().remove();
+            
+        });
         
-         function makeFormating (name, value){
+        function getValuebleInfo (currentObj) {
+            return newObj = {
+                name: currentObj.name,
+                continent: currentObj.continent,
+                gdp: currentObj.gdp,
+                life_expectancy: currentObj.life_expectancy,
+                population: currentObj.population,
+                year: currentObj.year
+            }
+        }
+        
+        function getInfoFromRow(row) {
+              return d3.range(Object.keys(row).length).map(function(column, i) {
+                  return makeFormating(Object.keys(row)[i], row[Object.keys(row)[i]]);
+              });
+          }
+        
+        function makeFormating (name, value){
             var formObj = {
                 gdp: function(val) {
                     return d3.format(".2s")(val);
@@ -161,7 +160,9 @@
             
             return value;
          }
-      });
+        
+        
+    })
     </script> 
   </body>
 </html>
