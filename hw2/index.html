@@ -6,22 +6,36 @@
     <link rel="stylesheet" href="style.css">
 </head>
   <body>
-      <span>Time update</span><input class="timeupdate" type="range" min = 1995 max = 2012 value="1995">
-      <div class="checkboxes">
-            <span>Filter by:</span>
-            <input type="checkbox" name="Americas" value="Americas" title="Americas"><label for = "Americas">Americas</label>
-            <input type="checkbox" name="Africa" value="Africa" title="Africa"><label for = "Africa">Africa</label>
-            <input type="checkbox" name="Asia" value="Asia" title="Asia"><label for = "Asia">Asia</label>
-            <input type="checkbox" name="Europe" value="Europe" title="Europe"><label for = "Europe">Europe</label>
-            <input type="checkbox" name="Oceania" value="Oceania" title="Oceania"><label for = "Oceania">Oceania</label>
+      <div class="table">
+          <span>Time update</span><input class="timeupdate" type="range" min = 1995 max = 2012 value="1995">
+          <div class="encoding">
+                <span>Encode Bars By:</span>
+                <input type="radio" id="population"  name="encoding" value="population" checked>
+                <label for="population">Population</label>
+                <input type="radio" id="gdp" name="encoding" value="gdp">
+                <label for="gdp">Gdp</label>
+          </div>
+          <div class="checkboxes">
+                <span>Filter by:</span>
+                <input type="checkbox" name="Americas" value="Americas" title="Americas"><label for = "Americas">Americas</label>
+                <input type="checkbox" name="Africa" value="Africa" title="Africa"><label for = "Africa">Africa</label>
+                <input type="checkbox" name="Asia" value="Asia" title="Asia"><label for = "Asia">Asia</label>
+                <input type="checkbox" name="Europe" value="Europe" title="Europe"><label for = "Europe">Europe</label>
+                <input type="checkbox" name="Oceania" value="Oceania" title="Oceania"><label for = "Oceania">Oceania</label>
+          </div>
+          <div class="aggregation">
+                <span>Aggregate Countries:</span>
+                <input type="radio" id="none"  name="aggreg" value="none" checked>
+                <label for="none">None</label>
+                <input type="radio" id="cont" name="aggreg" value="cont">
+                <label for="cont">By Continent</label>
+          </div>
+          <label class="switch">
+              <input type="checkbox" class="toogle">
+              <span class="slider round"></span>
+          </label>
       </div>
-      <div class="aggregation">
-            <span>Aggregate Countries:</span>
-            <input type="radio" id="none"  name="aggreg" value="none" checked>
-            <label for="none">None</label>
-            <input type="radio" id="cont" name="aggreg" value="cont">
-            <label for="cont">By Continent</label>
-      </div>
+      <svg class="svg-charts"></svg>
       <script src="http://d3js.org/d3.v3.min.js"></script>
       <script src="main.js"></script> 
   </body>

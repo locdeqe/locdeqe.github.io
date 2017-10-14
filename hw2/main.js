@@ -1,9 +1,11 @@
  d3.json("countries.json", function(error, data){
      	var valueData = getValuebleInfo(data);
-        
         var columns = Object.keys(valueData[0]);
-
-        var table = d3.select("body").append("table"),
+     
+        var margin = {top: 50, bottom: 10, left:300, right: 40};
+        var settings = makeCanvas();
+     
+        var table = d3.select(".table").append("table"),
             thead = table.append("thead")
                          .attr("class", "thead");
             tbody = table.append("tbody");
@@ -58,6 +60,7 @@
      
         renderTable(valueData);
          
+     
         d3.selectAll(".checkboxes input").on("change", renderChecked);
         
         d3.selectAll(".aggregation input").on("change", function(){
@@ -76,6 +79,25 @@
                 renderAggregation(valueData);
             }
         });
+        
+        d3.select(".toogle").on("change", function(){
+            if (this.checked){
+                table.style("display", "none");
+                d3.select(".svg-charts").style("display", "block");
+                d3.select(".encoding").style("display", "block");
+                renderSvg(valueData);
+            } else {
+                table.style("display", "table");
+                 d3.select(".svg-charts").style("display", "none");
+                d3.select(".encoding").style("display", "none")
+                renderTable(valueData);
+            }
+        })
+        
+        d3.selectAll(".encoding input").on("change", function(){
+            renderSvg(valueData);
+        });
+
         
         function renderAggregation(inputData) {
             var aggregatedData ={};
@@ -211,4 +233,118 @@
             
             d3.select('.aggregation input#none').property("checked", true);
         }
+          
+        function makeCanvas() {
+            var margin = {top: 50, bottom: 10, left:300, right: 40},
+            width = 1300 - margin.left - margin.right,
+            height = 1600 - margin.top - margin.bottom,
+            categoryIndent = 4*15 + 5,
+            defaultBarWidth = 2000;
+
+            //Set up scales
+            var x = d3.scale.linear().range([0, width]);
+            var y = d3.scale.ordinal().rangeRoundBands([0, height], .8, 0);
+
+            //Create SVG element
+            d3.select(".svg-charts").selectAll("svg").remove()
+            var svg = d3.select(".svg-charts").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate("+margin.left+","+margin.top+")");
+
+            //Package and export settings
+            var settings = {
+              margin:margin, width:width, height:height, categoryIndent:categoryIndent,
+              svg:svg, x:x, y:y
+            }
+            return settings;
+        };
+        
+        function renderSvg (inputData){
+            var margin=settings.margin, width=settings.width, height=settings.height, categoryIndent=settings.categoryIndent, 
+            svg=settings.svg, x=settings.x, y=settings.y;
+            
+            var value = document.querySelector(".encoding input:checked").value;
+            
+            var max = d3.max(inputData, function(d) { return d[value]; } );
+            var min = 0;
+
+            y.domain(inputData.map(function(d) { return d.name; }));
+            x.domain([0,max]);
+            
+            console.log(max)
+            
+             var groups =  d3.select(".svg-charts g").append("g")
+                    .selectAll("text")
+                    .data(inputData)
+                    .enter()
+                    .append("g");
+ 
+            var bars = groups
+                        .append("rect")
+                        .attr("width", function(d) { return x(d.population); })
+                        .attr("height", 5)
+                        .attr("x", x(min))
+                        .attr("y", function(d) { return y(d.name); })
+            
+            
+            
+            /*var chartRow = svg.selectAll("g.chartRow")
+              .data(inputData, function(d){ return d.key});
+            
+            var newRow = chartRow
+              .enter()
+              .append("g")
+              .attr("class", "chartRow")
+              .attr("transform", "translate(0," + height + margin.top + margin.bottom + ")");
+            
+            newRow.insert("rect")
+              .attr("class","bar")
+              .attr("x", 0)
+              .attr("opacity",0)
+              .attr("height", y.rangeBand())
+              .attr("width", function(d) { return x(d[value]);}) 
+
+            newRow.append("text")
+              .attr("class","label")
+              .attr("y", y.rangeBand()/2)
+              .attr("x",0)
+              .attr("opacity",0)
+              .attr("dy",".35em")
+              .attr("dx","0.5em")
+              .text(function(d){return d[value];}); 
+
+            newRow.append("text")
+              .attr("class","category")
+              .attr("text-overflow","ellipsis")
+              .attr("y", y.rangeBand()/2)
+              .attr("x",categoryIndent)
+              .attr("opacity",0)
+              .attr("dy",".35em")
+              .attr("dx","0.5em")
+              .text(function(d){return d.key});
+
+            chartRow.select(".bar").transition()
+              .duration(300)
+              .attr("width", function(d) { return x(d[value]);})
+              .attr("opacity",1);
+
+            chartRow.select(".category").transition()
+              .duration(300)
+              .attr("opacity",1);
+
+            chartRow.exit().transition()
+              .style("opacity","0")
+              .attr("transform", "translate(0," + (height + margin.top + margin.bottom) + ")")
+              .remove();
+
+
+            var delay = function(d, i) { return 200 + i * 30; };
+
+            chartRow.transition()
+                .delay(delay)
+                .duration(900)
+                .attr("transform", function(d){ return "translate(0," + y(d.key) + ")"; });*/
+        };
     })
