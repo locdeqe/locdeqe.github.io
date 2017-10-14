@@ -30,9 +30,10 @@
                     
                     return b[header].localeCompare(a[header]);
                     
-                    
                 });
-            
+                
+                tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
+                
                 data.sorted = "toUpper"+header;
             
             } else {
@@ -48,6 +49,8 @@
                     
 				    return a[header].localeCompare(b[header]);
                 });
+                
+                tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
         
                 data.sorted = "toLower"+header;
             }
@@ -55,74 +58,60 @@
      
         renderTable(valueData);
          
-        d3.selectAll(".checkboxes input").on("change", function(){             
-            var checkedBoxes = [];
-            var filtredData = [];
-            
-            
-            d3.selectAll('.checkboxes input:checked').each(function(){
-                checkedBoxes.push(this.value);
-            });
-            
-            if (!checkedBoxes.length || checkedBoxes.length == 4) {
-                filtredData = valueData;
-            } else {
-                valueData.forEach(function(current) {
-                    if (checkedBoxes.indexOf(current['continent']) > -1 ) {
-                        filtredData.push(current);
-                    }
-                });
-            } 
-           
-            filtredData = getValuebleInfo(filtredData);
-            
-            renderTable(filtredData);
-           
-            
-        });
+        d3.selectAll(".checkboxes input").on("change", renderChecked);
         
         d3.selectAll(".aggregation input").on("change", function(){
             if (document.querySelector(".aggregation input:checked").value == "none") {
                 renderTable(valueData);
             } else {
-                var aggregatedData ={};
-                var resultArray = [];
-                valueData.forEach(function(current){
-                    if (!aggregatedData[current.continent]) {
-                        aggregatedData[current.continent] = {
-                            name: current.continent,
-                            continent: current.continent,
-                            gdp: current.gdp,
-                            life_expectancy: current.life_expectancy,
-                            population: current.population,
-                            year: current.year,
-                            count: 0
-                        }
-                    } else {
-                        aggregatedData[current.continent].gdp += current.gdp;
-                        aggregatedData[current.continent].life_expectancy += current.life_expectancy;
-                        aggregatedData[current.continent].population +=  current.population;
-                        aggregatedData[current.continent].count++;
-                    }
-                })
-                var coutnres = Object.keys(aggregatedData);
-                
-                coutnres.forEach(function(current){
-                    aggregatedData[current].life_expectancy = aggregatedData[current].life_expectancy / aggregatedData[current].count;
-                    delete aggregatedData[current].count;
-                    resultArray.push(aggregatedData[current]);
-                })
-                renderTable(resultArray);
+                renderAggregation(valueData);
             }
         });
         
         d3.selectAll(".timeupdate").on("input", function(){
             valueData = getValuebleInfo(data, this.value);
-            renderTable(valueData);
-        })
+            if (document.querySelector(".aggregation input:checked").value == "none"){
+                renderChecked();
+            } else {
+                renderAggregation(valueData);
+            }
+        });
+        
+        function renderAggregation(inputData) {
+            var aggregatedData ={};
+            var resultArray = [];
+            inputData.forEach(function(current){
+                if (!aggregatedData[current.continent]) {
+                    aggregatedData[current.continent] = {
+                        name: current.continent,
+                        continent: current.continent,
+                        gdp: current.gdp,
+                        life_expectancy: current.life_expectancy,
+                        population: current.population,
+                        year: current.year,
+                        count: 0
+                    }
+                } else {
+                    aggregatedData[current.continent].gdp += current.gdp;
+                    aggregatedData[current.continent].life_expectancy += current.life_expectancy;
+                    aggregatedData[current.continent].population +=  current.population;
+                    aggregatedData[current.continent].count++;
+                }
+            })
+            var coutnres = Object.keys(aggregatedData);
+            
+            coutnres.forEach(function(current){
+                aggregatedData[current].life_expectancy = aggregatedData[current].life_expectancy / aggregatedData[current].count;
+                delete aggregatedData[current].count;
+                resultArray.push(aggregatedData[current]);
+            })
+            renderTable(resultArray);
+            tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
+            d3.selectAll('.checkboxes input:checked').property("checked", false);
+        }
      
         function renderTable(data){
-             var rows = d3.select("tbody").selectAll("tr").data(data);
+            var rows = d3.select("tbody").selectAll("tr").data(data);
             var cells = rows.selectAll("td").data(getInfoFromRow);
             
             cells.enter().append('td');
@@ -133,7 +122,7 @@
 
             cells_in_new_rows.enter().append('td');
             cells_in_new_rows.text(function (d) {return d});
-            
+            tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
             rows.exit().remove();
         }
         
@@ -198,5 +187,28 @@
             return value;
          }
         
-        
+        function renderChecked(){
+            var checkedBoxes = [];
+            var filtredData = [];
+            
+            d3.selectAll('.checkboxes input:checked').each(function(){
+                checkedBoxes.push(this.value);
+            });
+            
+            if (!checkedBoxes.length || checkedBoxes.length == 4) {
+                filtredData = valueData;
+            } else {
+                valueData.forEach(function(current) {
+                    if (checkedBoxes.indexOf(current['continent']) > -1 ) {
+                        filtredData.push(current);
+                    }
+                });
+            } 
+           
+            filtredData = getValuebleInfo(filtredData);
+            
+            renderTable(filtredData);
+            
+            d3.select('.aggregation input#none').property("checked", true);
+        }
     })

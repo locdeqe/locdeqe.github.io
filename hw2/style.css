@@ -1,31 +1,45 @@
 :root{
     font-size: 14px;
+    font-family: Verdana;
+    font-weight: normal;
+    color: #024457;
 }
 
 table {
-    width: 100%;
+    width: 90%;
     border: 1px solid #dad5d5;
     border-collapse: collapse;
+    margin: 10px auto;
 }
 
 caption {
-    border: 1px solid #dad5d5;
     border-collapse: collapse;
+    font-size: 25px;
+    font-style: italic;
+}
+
+tr {
+    background-color: #167F92;
+}
+
+th {
+    cursor: pointer;
 }
 
 td, th {
-    border: 1px solid grey;
+    border: 1px solid #FFF;
+    color: #FFF;
     border-spacing: 0px;
     border-collapse: collapse;
     text-align: center;
 }
 
 tbody tr:hover {
-    background: #F3ED86 !important;
+    background: #EDAD1F !important;
 }
 
 tbody tr:nth-child(odd){
-    background: #dad5d5;
+    background: #17B33A;
 }
 
 input {
