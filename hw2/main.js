@@ -271,8 +271,8 @@
         }
           
         function makeCanvas() {
-            var margin = {top: 0, bottom: 10, left:300, right: 40},
-            width = 1300 - margin.left - margin.right,
+            var margin = {top: 10, bottom: 10, left:200, right: 0},
+            width = window.innerWidth - margin.left - 200,
             height = 2100 - margin.top - margin.bottom,
             categoryIndent = 4*15 + 5,
             defaultBarWidth = 2000;
