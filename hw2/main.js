@@ -65,7 +65,11 @@
         
         d3.selectAll(".aggregation input").on("change", function(){
             if (document.querySelector(".aggregation input:checked").value == "none") {
-                renderTable(valueData);
+                if (d3.select(".toogle").node().checked){
+                    renderSvg(valueData);
+                } else {
+                    renderTable(valueData);
+                };
             } else {
                 renderAggregation(valueData);
             }
@@ -95,7 +99,7 @@
         })
         
         d3.selectAll(".encoding input").on("change", function(){
-            renderSvg(valueData);
+            renderChecked(valueData);
         });
 
         
@@ -127,7 +131,13 @@
                 delete aggregatedData[current].count;
                 resultArray.push(aggregatedData[current]);
             })
-            renderTable(resultArray);
+            
+             if (d3.select(".toogle").node().checked){
+                renderSvg(resultArray);
+            } else {
+                renderTable(resultArray);
+            }
+            //renderTable(resultArray);
             tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
             d3.selectAll('.checkboxes input:checked').property("checked", false);
         }
@@ -253,7 +263,7 @@
             d3.select(".svg-charts").selectAll("svg").remove()
             var svg = d3.select(".svg-charts").append("svg")
                 .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
+                //.attr("height", height + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate("+margin.left+","+margin.top+")");
 
@@ -266,13 +276,18 @@
         };
         
         function renderSvg (inputData){
-            var margin=settings.margin, width=settings.width, height=settings.height, categoryIndent=settings.categoryIndent, 
+            var margin=settings.margin, width=settings.width, categoryIndent=settings.categoryIndent, 
             svg=settings.svg, x=settings.x, y=settings.y;
             
             var value = document.querySelector(".encoding input:checked").value;
             
             var max = d3.max(inputData, function(d) { return d[value]; } );
             var min = 0;
+            
+            var height = inputData.length * 20;
+            
+            d3.select(".svg-charts svg").attr("height", height);
+            y = d3.scale.ordinal().rangeRoundBands([0, height], .8, 0);
 
             x.domain([min, max]);
             y.domain(inputData.map(function(d) { return d.name; }));
