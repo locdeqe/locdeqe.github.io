@@ -89,19 +89,42 @@
                 table.style("display", "none");
                 d3.select(".svg-charts").style("display", "block");
                 d3.select(".encoding").style("display", "block");
-                renderSvg(valueData);
+                d3.select(".svgSort").style("display", "block");
+                
+                if (document.querySelector(".aggregation input:checked").value == "none"){
+                    renderChecked(valueData);
+                } else {
+                    renderAggregation(valueData);
+                }
             } else {
                 table.style("display", "table");
-                 d3.select(".svg-charts").style("display", "none");
-                d3.select(".encoding").style("display", "none")
-                renderTable(valueData);
+                d3.select(".svg-charts").style("display", "none");
+                d3.select(".encoding").style("display", "none");
+                d3.select(".svgSort").style("display", "none");
+                if (document.querySelector(".aggregation input:checked").value == "none"){
+                    renderChecked(valueData);
+                } else {
+                    renderAggregation(valueData);
+                }
             }
         })
         
         d3.selectAll(".encoding input").on("change", function(){
-            renderChecked(valueData);
+            if (document.querySelector(".aggregation input:checked").value == "none"){
+                renderChecked(valueData);
+            } else {
+                renderAggregation(valueData);
+            }
+            
         });
-
+     
+        d3.selectAll(".svgSort input").on("change", function(){
+            if (document.querySelector(".aggregation input:checked").value == "none"){
+                renderChecked(valueData);
+            } else {
+                renderAggregation(valueData);
+            }
+        });
         
         function renderAggregation(inputData) {
             var aggregatedData ={};
@@ -137,7 +160,6 @@
             } else {
                 renderTable(resultArray);
             }
-            //renderTable(resultArray);
             tbody.style('opacity', 0.0).transition().duration(500).style('opacity', 1.0);
             d3.selectAll('.checkboxes input:checked').property("checked", false);
         }
@@ -217,7 +239,7 @@
             }
             
             return value;
-         }
+        }
         
         function renderChecked(){
             var checkedBoxes = [];
@@ -280,54 +302,56 @@
             svg=settings.svg, x=settings.x, y=settings.y;
             
             var value = document.querySelector(".encoding input:checked").value;
+            var sortFilter = document.querySelector(".svgSort input:checked").value;
             
             var max = d3.max(inputData, function(d) { return d[value]; } );
             var min = 0;
             
-            var height = inputData.length * 20;
+            var height = inputData.length * 20 + margin.top + margin.bottom;
             
             d3.select(".svg-charts svg").attr("height", height);
-            y = d3.scale.ordinal().rangeRoundBands([0, height], .8, 0);
+            y = d3.scale.ordinal().rangeRoundBands([0, height -  margin.top - margin.bottom]);
 
             x.domain([min, max]);
             y.domain(inputData.map(function(d) { return d.name; }));
             
- 
-            /*var groups = g.append("g")
-                        .selectAll("text")
-                        .data(inputData)
-                        .enter()
-                        .append("g");
- 
-            var bars = groups
-                        .append("rect")
-                        .attr("width", function(d) { return x(d.population); })
-                        .attr("height", 5)
-                        .attr("x", x(min))
-                        .attr("y", function(d) { return y(d.name); })*/
+            inputData.sort(function(a, b){
+                if (sortFilter == "name") {
+                    return d3.ascending(a[sortFilter], b[sortFilter]);
+                }
+                return d3.descending(a[sortFilter], b[sortFilter]);
+            });
+            
+            var minVal = d3.min(inputData, function(d) { return d[value]; } );
+            var maxVal = d3.max(inputData, function(d) { return d[value]; } );
                         
-            
-            
-            var chartRow = svg.selectAll("g.chartRow")
-	                           .data(inputData, function(d){ return d.name});
+            var chartRow = svg.selectAll("g.chartRow").data(inputData, function(d){ return d.name});
             
             var newRow = chartRow
               .enter()
               .append("g")
-              .attr("class", "chartRow")
-              //.attr("transform", "translate(0," + height + margin.top + margin.bottom + ")");
+              .attr("class", "chartRow");
             
             newRow.append("rect")
                   .attr("width", function(d) { return x(d[value]); })
+                  .style({
+                      fill: function(d){
+                          if (d.continent == "Asia") return "#CA0300";
+                          if (d.continent == "Americas") return "#E16519";
+                          if (d.continent == "Europe") return "#CACE17";
+                          if (d.continent == "Africa") return "#388C04";
+                          if (d.continent == "Asia") return "#047331";
+                      }
+                  })
                   .attr("x", x(min))
-                  //.attr("opacity",0)
+                  .attr("opacity",0)
                   .attr("height", 12)
-                  .attr("y", function(d) {return y(d.name) - 10;}) 
+                  .attr("y", function(d) {return inputData.indexOf(d)}) 
 
 
             var text = newRow.append("text")
-              .attr("y", function(d) {return y(d.name);})
-              //.attr("opacity",0)
+              .attr("y", function(d, i) {console.log(d.name, inputData.indexOf(d)); return inputData.indexOf(d);})
+              .attr("opacity",0)
               .text(function(d){return d.name});
             
             text.each(function(){
@@ -336,32 +360,23 @@
         
 
             chartRow.select("rect").transition()
-              .duration(300)
+              .duration(500)
               .attr("width", function(d) { return x(d[value]);})
               .attr("x", x(min))
-              .attr("y", function(d) {return y(d.name) - 10;})
+              .attr("y", function(d) {return inputData.indexOf(d)*20 - 10;})
+              .duration(1000)
               .attr("opacity",1);
             
             chartRow.select("text").transition()
-              .duration(300)
-              .attr("y", function(d) {return y(d.name);})
+              .duration(500)
+              .attr("y", function(d) {return inputData.indexOf(d)*20;})
+              .duration(1000)
               .attr("opacity",1);
 
-            /*chartRow.select(".category").transition()
-              .duration(300)
-              .attr("opacity",1);*/
 
             chartRow.exit().transition()
-              //.style("opacity","0")
               .attr("transform", "translate(0," + (height + margin.top + margin.bottom) + ")")
               .remove();
 
-
-            //var delay = function(d, i) { return 200 + i * 30; };
-
-            chartRow/*.transition()
-                .delay(delay)
-                .duration(900)*/
-                //.attr("transform", function(d){ return "translate(0," + y(d.name) + ")"; });
         };
     })
