@@ -229,7 +229,11 @@
            
             filtredData = getValuebleInfo(filtredData);
             
-            renderTable(filtredData);
+            if (d3.select(".toogle").node().checked){
+                renderSvg(filtredData);
+            } else {
+                renderTable(filtredData);
+            }
             
             d3.select('.aggregation input#none').property("checked", true);
         }
@@ -237,7 +241,7 @@
         function makeCanvas() {
             var margin = {top: 50, bottom: 10, left:300, right: 40},
             width = 1300 - margin.left - margin.right,
-            height = 1600 - margin.top - margin.bottom,
+            height = 2100 - margin.top - margin.bottom,
             categoryIndent = 4*15 + 5,
             defaultBarWidth = 2000;
 
@@ -270,81 +274,79 @@
             var max = d3.max(inputData, function(d) { return d[value]; } );
             var min = 0;
 
+            x.domain([min, max]);
             y.domain(inputData.map(function(d) { return d.name; }));
-            x.domain([0,max]);
             
-            console.log(max)
-            
-             var groups =  d3.select(".svg-charts g").append("g")
-                    .selectAll("text")
-                    .data(inputData)
-                    .enter()
-                    .append("g");
+ 
+            /*var groups = g.append("g")
+                        .selectAll("text")
+                        .data(inputData)
+                        .enter()
+                        .append("g");
  
             var bars = groups
                         .append("rect")
                         .attr("width", function(d) { return x(d.population); })
                         .attr("height", 5)
                         .attr("x", x(min))
-                        .attr("y", function(d) { return y(d.name); })
+                        .attr("y", function(d) { return y(d.name); })*/
+                        
             
             
-            
-            /*var chartRow = svg.selectAll("g.chartRow")
-              .data(inputData, function(d){ return d.key});
+            var chartRow = svg.selectAll("g.chartRow")
+	                           .data(inputData, function(d){ return d.name});
             
             var newRow = chartRow
               .enter()
               .append("g")
               .attr("class", "chartRow")
-              .attr("transform", "translate(0," + height + margin.top + margin.bottom + ")");
+              //.attr("transform", "translate(0," + height + margin.top + margin.bottom + ")");
             
-            newRow.insert("rect")
-              .attr("class","bar")
-              .attr("x", 0)
-              .attr("opacity",0)
-              .attr("height", y.rangeBand())
-              .attr("width", function(d) { return x(d[value]);}) 
+            newRow.append("rect")
+                  .attr("width", function(d) { return x(d[value]); })
+                  .attr("x", x(min))
+                  //.attr("opacity",0)
+                  .attr("height", 12)
+                  .attr("y", function(d) {return y(d.name) - 10;}) 
 
-            newRow.append("text")
-              .attr("class","label")
-              .attr("y", y.rangeBand()/2)
-              .attr("x",0)
-              .attr("opacity",0)
-              .attr("dy",".35em")
-              .attr("dx","0.5em")
-              .text(function(d){return d[value];}); 
 
-            newRow.append("text")
-              .attr("class","category")
-              .attr("text-overflow","ellipsis")
-              .attr("y", y.rangeBand()/2)
-              .attr("x",categoryIndent)
-              .attr("opacity",0)
-              .attr("dy",".35em")
-              .attr("dx","0.5em")
-              .text(function(d){return d.key});
+            var text = newRow.append("text")
+              .attr("y", function(d) {return y(d.name);})
+              //.attr("opacity",0)
+              .text(function(d){return d.name});
+            
+            text.each(function(){
+                d3.select(this).attr("x", -this.getComputedTextLength())
+            })
+        
 
-            chartRow.select(".bar").transition()
+            chartRow.select("rect").transition()
               .duration(300)
               .attr("width", function(d) { return x(d[value]);})
+              .attr("x", x(min))
+              .attr("y", function(d) {return y(d.name) - 10;})
+              .attr("opacity",1);
+            
+            chartRow.select("text").transition()
+              .duration(300)
+              .attr("y", function(d) {return y(d.name);})
               .attr("opacity",1);
 
-            chartRow.select(".category").transition()
+            /*chartRow.select(".category").transition()
               .duration(300)
-              .attr("opacity",1);
+              .attr("opacity",1);*/
 
             chartRow.exit().transition()
-              .style("opacity","0")
+              //.style("opacity","0")
               .attr("transform", "translate(0," + (height + margin.top + margin.bottom) + ")")
               .remove();
 
 
-            var delay = function(d, i) { return 200 + i * 30; };
+            //var delay = function(d, i) { return 200 + i * 30; };
 
-            chartRow.transition()
+            chartRow/*.transition()
                 .delay(delay)
-                .duration(900)
-                .attr("transform", function(d){ return "translate(0," + y(d.key) + ")"; });*/
+                .duration(900)*/
+                //.attr("transform", function(d){ return "translate(0," + y(d.name) + ")"; });
         };
     })
