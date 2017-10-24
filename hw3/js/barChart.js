@@ -18,7 +18,7 @@ class BarChart {
      */
     
     updateBarChart(selectedDimension) {
-        console.log(this.allData);
+        let self = this;
         let svgCanvas = d3.selectAll("svg#barChart");
         let min =  d3.min(this.allData, function(d) { return d[selectedDimension]; } );
         let max =  d3.max(this.allData, function(d) { return d[selectedDimension]; } );
@@ -70,7 +70,7 @@ class BarChart {
             bars.enter()
                 .append("rect")
                 .on("click", function(d){
-                    //InfoPanel.updateInfo.call(d);
+                    self.infoPanel.updateInfo(d);
                     d3.selectAll("rect").data(inputData).transition().duration(500).style('fill', function (d) {return color(d[selectedDimension]);});
                     d3.select(this).transition()
                       .duration(500)

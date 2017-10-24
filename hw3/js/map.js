@@ -56,20 +56,22 @@ class Map {
      * @param the json data with the shape of all countries
      */
     drawMap(world) {
+        let mapCanvas = d3.select("g#map");
+        let projection = d3.geoConicConformal();
+        let path = d3.geoPath().projection(projection);
+        let countries = topojson.feature(world, world.objects.countries).features;
+        
+        /*mapCanvas.append("path")
+                 .datum(topojson.feature(world, world.objects.countries))
+                 .attr("d", d3.geoPath().projection(projection));*/
+        
+        mapCanvas.selectAll('.country').data(countries).enter()
+                .append('path')
+                .attr('class', 'country')
+                .attr('d', path);
+        
 
-        //(note that projection is a class member
-        // updateMap() will need it to add the winner/runner_up markers.)
-
-        // ******* TODO: PART IV *******
-
-        // Draw the background (country outlines; hint: use #map)
-        // Make sure and add gridlines to the map
-
-        // Hint: assign an id to each country path to make it easier to select afterwards
-        // we suggest you use the variable in the data element's .id field to set the id
-
-        // Make sure and give your paths the appropriate class (see the .css selectors at
-        // the top of the provided html file)
+        console.log(world);
 
     }
 
