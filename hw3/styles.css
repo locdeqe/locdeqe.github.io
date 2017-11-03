@@ -11,6 +11,7 @@
 
 .team {
     fill: #fee8c8;
+    transition: all 1s ease;
 }
 
 .team-html {
@@ -19,6 +20,7 @@
 
 .host {
     fill: #2b8cbe;
+    transition: all 1s ease;
 }
 
 .gold {
@@ -145,4 +147,10 @@ header {
 #yAxis text {
     font-size: 14px;
 
+}
+
+.graticule {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .1;
 }

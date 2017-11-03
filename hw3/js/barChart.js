@@ -71,6 +71,7 @@ class BarChart {
                 .append("rect")
                 .on("click", function(d){
                     self.infoPanel.updateInfo(d);
+                    self.worldMap.updateMap(d);
                     d3.selectAll("rect").data(inputData).transition().duration(500).style('fill', function (d) {return color(d[selectedDimension]);});
                     d3.select(this).transition()
                       .duration(500)

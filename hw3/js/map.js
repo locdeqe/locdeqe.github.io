@@ -5,7 +5,8 @@ class Map {
      */
     constructor() {
         this.projection = d3.geoConicConformal().scale(150).translate([400, 350]);
-
+        this.mapCanvas = d3.select("g#map");
+        this.path = d3.geoPath().projection(this.projection).pointRadius(8);
     }
 
     /**
@@ -13,13 +14,9 @@ class Map {
      */
     clearMap() {
 
-        // ******* TODO: PART V*******
-        // Clear the map of any colors/markers; You can do this with inline styling or by
-        // defining a class style in styles.css
-
-        // Hint: If you followed our suggestion of using classes to style
-        // the colors and markers for hosts/teams/winners, you can use
-        // d3 selection and .classed to set these classes on and off here.
+        this.mapCanvas.selectAll(".countries").attr("class", "countries");
+        d3.select(".gold").remove();
+        d3.select(".silver").remove();
 
     }
 
@@ -31,6 +28,37 @@ class Map {
 
         //Clear any previous selections;
         this.clearMap();
+        
+        let path = this.path;
+        
+        this.mapCanvas.selectAll(".countries")
+                    .attr("class", function(d){
+                        let classNames = "countries";
+                        if (d.id == worldcupData.host_country_code) {
+                            classNames += " host";
+                        }
+                        if (worldcupData.TEAM_LIST.indexOf(d.id) + 1) {
+                            classNames += " team";
+                        }
+                        return classNames;
+                    });
+        
+        this.mapCanvas.append('path')
+                    .attr('class', 'gold')
+                    .attr('d', function (d) {
+                        return path({
+                            'type': 'Point',
+                            'coordinates': [worldcupData.WIN_LON, worldcupData.WIN_LAT]
+                        });
+                    });
+        this.mapCanvas.append('path')
+                    .attr('class', 'silver')
+                    .attr('d', function (d) {
+                        return path({
+                            'type': 'Point',
+                            'coordinates': [worldcupData.RUP_LON, worldcupData.RUP_LAT]
+                        });
+                    });
 
         // ******* TODO: PART V *******
 
@@ -56,22 +84,18 @@ class Map {
      * @param the json data with the shape of all countries
      */
     drawMap(world) {
-        let mapCanvas = d3.select("g#map");
-        let projection = d3.geoConicConformal();
-        let path = d3.geoPath().projection(projection);
-        let countries = topojson.feature(world, world.objects.countries).features;
-        
-        /*mapCanvas.append("path")
-                 .datum(topojson.feature(world, world.objects.countries))
-                 .attr("d", d3.geoPath().projection(projection));*/
-        
-        mapCanvas.selectAll('.country').data(countries).enter()
-                .append('path')
-                .attr('class', 'country')
-                .attr('d', path);
-        
-
+        this.countries = topojson.feature(world, world.objects.countries).features;
         console.log(world);
+        
+        this.mapCanvas.append('path')
+                .datum(d3.geoGraticule().stepMinor([10, 10]))
+                .attr('class', 'graticule')
+                .attr('d', this.path);
+        
+        this.mapCanvas.selectAll('.countries').data(this.countries).enter()
+                .append('path')
+                .attr('class', 'countries')
+                .attr('d', this.path);
 
     }
 
