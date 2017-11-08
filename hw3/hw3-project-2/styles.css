@@ -44,6 +44,10 @@ tbody td {
     color:black
 }
 
+tr {
+    cursor: pointer;
+}
+
 tbody tr:hover {
     background-color: #dbdbdb;
 }

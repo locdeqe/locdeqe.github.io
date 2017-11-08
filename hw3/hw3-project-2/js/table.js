@@ -120,14 +120,14 @@ class Table {
                         element.classed("sorted", false);
 
                         self.teamData.sort(function(a,b) {
-                            if ( allResults.indexOf(b.value.result.label) == allResults.indexOf(a.value.result.label) ) return b.key.localeCompare(a.key);
+                            if ( allResults.indexOf(b.value.result.label) == allResults.indexOf(a.value.result.label) ) return a.key.localeCompare(b.key);
                             return allResults.indexOf(b.value.result.label) - allResults.indexOf(a.value.result.label);
                         });
                     } else {
                         element.classed("sorted", true);
 
                         self.teamData.sort(function(a,b) {
-                            if ( allResults.indexOf(a.value.result.label) == allResults.indexOf(b.value.result.label) ) return a.key.localeCompare(b.key);
+                            if ( allResults.indexOf(a.value.result.label) == allResults.indexOf(b.value.result.label) ) return b.key.localeCompare(a.key);
                             return allResults.indexOf(a.value.result.label) - allResults.indexOf(b.value.result.label);
                         })
                     }
@@ -136,14 +136,14 @@ class Table {
                         element.classed("sorted", false);
 
                         self.teamData.sort(function(a,b) {
-                            if (b.value[incomeString] == a.value[incomeString]) return b.key.localeCompare(a.key);
+                            if (b.value[incomeString] == a.value[incomeString]) return a.key.localeCompare(b.key);
                             return b.value[incomeString] - a.value[incomeString];
                         });
                     } else {
                         element.classed("sorted", true);
 
                         self.teamData.sort(function(a,b) {
-                            if (b.value[incomeString] == a.value[incomeString]) return a.key.localeCompare(b.key);
+                            if (b.value[incomeString] == a.value[incomeString]) return b.key.localeCompare(a.key);
                             return a.value[incomeString] - b.value[incomeString];
                         })
                     }
