@@ -182,3 +182,13 @@ g.match text {
 g.match circle {
     fill: green;
 }
+
+tbody tr td:first-child{
+    color: grey;
+    font-style: italic;
+}
+
+.aggregate td:first-child{
+    color: green;
+    font-style: normal;
+}
