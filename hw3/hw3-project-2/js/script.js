@@ -43,14 +43,7 @@ d3.csv("data/fifa-matches.csv", function (error, matchesCSV) {
                             wins: d3.sum(d, function(l){return l["Wins"]}),
                             losses: d3.sum(d, function(l){return l["Losses"]}),
                             result: {
-                                label: d3.max(d, function(l){
-                                    let results = ["Group", "Round of Sixteen", "Fourth Place", "Third Place", "Runner-Up", "Winner"]
-                                    let max = "Group";
-                                    
-                                    if ( results.indexOf(l["Result"]) > results.indexOf(max)) max = l["Result"];
-                                    
-                                    return max;
-                                }),
+                                label: getLabel(d),
                                 ranking: getRang(d)
                             },
                             totalGames: d.length,
@@ -68,16 +61,24 @@ d3.csv("data/fifa-matches.csv", function (error, matchesCSV) {
         }
         return d.length;
     }
+
+    function getLabel(d) {
+        let results = ["Group", "Round of Sixteen", "Fourth Place", "Third Place", "Runner-Up", "Winner"];
+        let max = "Group";
+
+        d.forEach(function(current) {
+            if ( results.indexOf(current["Result"]) > results.indexOf(max)) max = current["Result"];
+        })
+
+        return max;
+    }
     
                                 
-    console.log(matchesCSV);
-
-    console.log(teamData);
 
     d3.csv("data/fifa-tree.csv", function (error, treeCSV) {
 
             treeCSV.forEach(function (d, i) {
-                d.id = d.Team + d.Opponent + i;
+                d.id = d.Team + i;
             });
 
            

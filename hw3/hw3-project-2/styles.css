@@ -7,7 +7,7 @@ table {
 
 th {
     font-weight: normal;
-    text-align: right;
+    text-align: center;
     padding-right: 6px;
     min-width: 125px;
 }
@@ -115,6 +115,10 @@ header {
     r:5;
 }
 
+circle {
+    transition: all 1s ease;
+}
+
 
 .node circle {
     fill: #be2714;
@@ -122,6 +126,8 @@ header {
 
 .node text {
     font: 14px sans-serif;
+    fill: #000;
+    transition: all 1s ease;
 }
 
 .winner circle {
@@ -137,6 +143,7 @@ header {
     stroke: #555;
     stroke-opacity: 0.4;
     stroke-width: 2px;
+    transition: all 1s ease;
 }
 
 .selected {
@@ -156,4 +163,18 @@ header {
     float: left;
 }
 
+.redLine {
+    stroke: red;
+}
 
+text.redText {
+    fill: red;
+}
+
+g.match text {
+    fill: green;
+}
+
+g.match circle {
+    fill: green;
+}
