@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<style>
+  .link {
+    stroke: gray;
+    stroke-width: .8px;
+  }
+
+  .node {
+    fill: white;
+    stroke: #000;
+    stroke-width: .9px;
+  }
+
+  .node:hover {
+    fill: black;
+  }
+
+</style>
+<head>
+    <meta charset="utf-8">
+    <title>Homework 4 (part 1)</title>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src = "js/main.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <select class = "select">
+        <option value = "gdp">GDP</option>
+        <option value="population" selected>Population</option>
+    </select>
+    <div class = "wrapper">
+        <svg class = "mainCanvas"></svg>
+    </div>
+</body>

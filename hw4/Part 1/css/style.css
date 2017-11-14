@@ -1,0 +1,14 @@
+.wrapper {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+.mainCanvas {
+    width: 1200px;
+}
+
+.country {
+    r: 5px;
+    stroke: #000;
+    stroke-width: .9px;
+}
