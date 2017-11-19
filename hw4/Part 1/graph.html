@@ -24,10 +24,29 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <select class = "select">
-        <option value = "gdp">GDP</option>
-        <option value="population" selected>Population</option>
-    </select>
+    <div>
+        Points layout:
+        <select class = "select">
+            <option value = "economic">By economic</option>
+            <option value = "geo" selected>By geo</option>
+        </select>
+    </div>
+    <div>
+         Cirle layout: 
+        <select class = "select_circle">
+            <option value = "none" selected>None</option>
+            <option value = "population">By population</option>
+            <option value = "gdp">By gdp</option>
+        </select>
+    </div>
+    <div>
+        Foci layout: 
+        <select class = "select_foci">
+            <option value = "none" selected>None</option>
+            <option value = "center">In center</option>
+            <option value = "continent">By continent</option>
+        </select>
+    </div>
     <div class = "wrapper">
         <svg class = "mainCanvas"></svg>
     </div>
