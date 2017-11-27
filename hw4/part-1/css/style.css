@@ -1,0 +1,52 @@
+.wrapper {
+    margin: 0 auto;
+    width: 1200px;
+}
+
+.mainCanvas {
+    width: 1200px;
+}
+
+.country {
+    r: 5px;
+    fill: #fff;
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+.link {
+    stroke: gray;
+    stroke-width: .8px;
+    fill-opacity: 0;
+}
+
+path {
+    transition: all 1s ease;
+}
+.highlight {
+    stroke: red;
+    stroke-width: 5px;
+    stroke-opacity: 1;
+    z-index: 3;
+}
+.opacity {
+    stroke-opacity: .2;
+}
+
+.source {
+    stroke-opacity: 1;
+    fill: #000;
+}
+
+.target {
+    stroke-opacity: 1;
+}
+
+.opacityText {
+    opacity: .1;
+}
+
+.targetText {
+    opacity: 1;
+}
+

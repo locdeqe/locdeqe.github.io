@@ -1,0 +1,328 @@
+@font-face{
+    font-family: 'Geometria';
+    src: url('fonts/Geometria.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Geometria';
+    src: url('fonts/Geometria-Italic.otf');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face{
+    font-family: 'Geometria';
+    src: url('fonts/Geometria-Bold.otf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Proxima Nova';
+    src: url('fonts/Proxima Nova Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Proxima Nova';
+    src: url('fonts/Proxima Nova Regular Italic.otf');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face{
+    font-family: 'Proxima Nova';
+    src: url('fonts/Proxima Nova Bold.otf');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Proxima Nova";
+}
+
+
+.header {
+    height: 90px;
+    width: 100%;
+    min-width: 320px;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, .2);
+    padding: 20px 50px 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__menu {
+    display: flex;
+    align-items: center;
+}
+
+.header__icons {
+    display: flex;
+    align-items: center;
+}
+
+.header__burger {
+    margin-right: 30px;
+    width: 25px;
+    height: 25px;
+    background: url(icons/burger.png);
+    cursor: pointer;
+}
+
+.logo {
+    width: 139px;
+    height: 49px;
+    background: url(icons/logo.png);
+}
+
+.header__phone {
+    font-family: "Geometria";
+    padding-right: 35px;
+    font-size: 27px;
+}
+
+.phone a{
+    color: #000;
+    text-decoration: none;
+}
+
+.phone__text {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: #4AA6AD;
+    cursor: pointer;
+}
+
+.color-blue {
+    color: #4AA6AD;
+}
+
+.icon {
+    display: flex;
+    flex-direction: column;
+    margin-left: 55px;
+    text-align: center;
+    align-items: center;
+    font-size: 15px;
+    color: #5E686E;
+    cursor: pointer;
+}
+
+.icon-login {
+    margin-right: 95px;
+}
+
+.icon__placeholder {
+    width: 25px;
+    height: 25px;
+}
+
+.icon-message .icon__placeholder {
+    background: url(icons/message.png);
+    background-size: contain;
+}
+
+.icon-login .icon__placeholder {
+    background: url(icons/login.png);
+    background-size: contain;
+}
+
+.icon-best .icon__placeholder {
+    background: url(icons/favorite.png);
+    background-size: contain;
+    position: absolute;
+    opacity: 1;
+    transition: all .5s ease;
+}
+
+.icon-best:hover .bestCount {
+    visibility: visible;
+    opacity: 1;
+}
+
+.icon-best:hover .icon__placeholder {
+    opacity: 0;
+}
+
+.icon-search .icon__placeholder {
+    background: url(icons/search.png);
+    background-size: contain;
+}
+
+.search {
+    border: none;
+    width: 0;
+    background: #ECECEC;
+    background-repeat: no-repeat;
+    background-position: 13px;
+    height: 55px;
+    padding: 13px 45px;
+    font-size: 18px;
+    color: #ADADAD;
+    visibility: hidden;
+    position: absolute;
+    margin-left: -330px;
+    margin-top: -7px;
+    transition: all .3s ease;
+}
+
+.search-visable {
+    visibility: visible;
+    width: 735px;
+}
+
+.icon__placeholder-search {
+    position: relative;
+    right: 670px;
+    top: 8px;
+}
+
+.bestCount {
+    width: 100%;
+    visibility: hidden;
+    justify-content: center;
+    opacity: 0;
+    transition: all 1s ease;
+}
+
+.bestCount__placeholder {
+    background: url(icons/redHeart.png);
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+}
+
+.bestCount__count {
+    display: inline-block;
+    vertical-align: top;
+    width: 22px;
+    height: 22px;
+    background: #4AA6AD;
+    color: #fff;
+    border-radius: 22px;
+    line-height: 24px;
+    font-size: 12px;
+    position: relative;
+    top: 3px;
+    right: 10px;
+}
+
+.icon-message {
+    display: none;
+}
+
+.menu {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    visibility: hidden;
+}
+
+.menu-open {
+   visibility: visible;  
+}
+
+
+.menu__payload {
+    background: #fff;
+    width: 322px;
+    transform: translate(-332px, 0);
+    transition: all .5s ease-in-out;
+}
+
+.menu-open  .menu__payload {
+    transform: translate(0, 0);
+}
+
+.menu__blackArea {
+    width: calc(100% - 322px);
+    background: none;
+    transition: all .5s ease;
+}
+
+.menu-open .menu__blackArea {;
+    background: rgba(0,0,0,.8);
+}
+
+.menu__icons {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 40px;
+    border: 1px solid #E6E6E6;
+    box-shadow: 0 2px 1px #E6E6E6;
+    margin-bottom: 20px;
+}
+
+.menu__subsection {
+    padding-top: 35px;
+    padding-left: 55px;
+}
+
+.menu__subsection p {
+    font-size: 15px;
+    color: #939393;
+    margin-bottom: 25px;
+}
+
+.menu__list {
+    list-style: none;
+    font-size: 20px;
+}
+
+.menu__list li {
+    margin: 15px 0;
+    cursor: pointer;
+}
+
+.menu__contancts {
+    margin-top: 45px;
+    padding: 40px 0 60px 45px;
+    border: 1px solid #E6E6E6;
+    box-shadow: 0 -2px 1px #E6E6E6;
+}
+
+.button {
+    width: 230px;
+    height: 50px;
+    background: #4AA6AD;
+    border: none;
+    color: #fff;
+    font-family: "Geometria";
+    font-size: 20px;
+    line-height: 50px;
+    cursor: pointer;
+}
+
+.menu__button {
+    margin-bottom: 40px;
+}
+
+.footer__phone {
+    font-family: "Geometria";
+    font-size: 23px;
+}
+
+.menu__close {
+    width: 24px;
+    height: 24px;
+    background: url(icons/close.png);
+    cursor: pointer;
+    position: fixed;
+    right: 19px;
+    top: 19px;
+}
