@@ -10,6 +10,10 @@
                     .nodes(valueData)
                     .on("tick", tick);
      
+     let select_circle = d3.select(".select_circle");
+     let select_foci =  d3.select(".select_foci");
+     let select =  d3.select(".select");
+     
      d3.json("data/countries_1995_2012.json", function(error, data){
         valueData = valueData.map(function(item, i){
             item.id = data[i].country_id;
@@ -18,15 +22,21 @@
         })
      });
      
-     d3.select(".select").on("change", function(){
+     select.on("change", function(){
          renderSvg(valueData);
+         select_foci.property("value", "none");
+         select_circle.property("value", "none");
      })
      
-     d3.select(".select_circle").on("change", function(){
+     select_circle.on("change", function(){
          renderCircle(valueData);
+         select_foci.property("value", "none");
+         select.property("value", "none");
      })
      
-     d3.select(".select_foci").on("change", function(){
+     select_foci.on("change", function(){
+         select_circle.property("value", "none");
+         select.property("value", "none");
          renderFoci(valueData);
      })
      
@@ -241,14 +251,14 @@
                     .append("path")
                     .attr("class", "link")
                     .attr("d", function(d) {
-                        let x0 = 900 - d.source.x/2;
-                        let x1 = 900 - d.target.x/2;
-                        let y0 = 500 - d.source.y/2;
-                        let y1 = 500 - d.target.y/2;
+                         let x0 = Math.abs(d.source.x + 600)/2;
+                         let x1 = Math.abs(d.target.x + 600)/2;
+                         let y0 = Math.abs(d.source.y + 470)/2;
+                         let y1 = Math.abs(d.target.y + 470)/2;
                         
                        return "M" + d.source.x + "," + d.source.y
                          + "C" + x0 + "," + y0
-                         + " " + (.5 * x1 + .5 * x0) + "," + (.5 * y1 + .5 * y0)
+                         + " " + x1 + "," + y1
                          + " " + d.target.x + "," + d.target.y;
                        });
          
@@ -292,14 +302,14 @@
              let radius = Math.sqrt((d.source.x - d.target.x) ** 2 + (d.source.y - d.target.y) ** 2)
              
              //600, 470;
-             let x0 = Math.abs(d.source.x - 900);
-             let x1 = Math.abs(d.target.x - 300);
-             let y0 = Math.abs(d.source.y - 470);
-             let y1 = Math.abs(d.target.y - 470);
+             let x0 = Math.abs(d.source.x + 600)/2;
+             let x1 = Math.abs(d.target.x + 600)/2;
+             let y0 = Math.abs(d.source.y + 470)/2;
+             let y1 = Math.abs(d.target.y + 470)/2;
              
              let dValue = "M" + d.source.x + "," + d.source.y
                          + "C" + x0 + "," + y0
-                         + " " + x0 + "," + y0
+                         + " " + x1 + "," + y1
                          + " " + d.target.x + "," + d.target.y;
             
            let path = d3.selectAll(`path[d="${dValue}"]`).remove();

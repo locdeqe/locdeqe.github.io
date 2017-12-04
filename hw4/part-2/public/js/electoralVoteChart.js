@@ -87,11 +87,12 @@ class ElectoralVoteChart {
                 .data(electionResult)
                 .enter()
                 .append("rect")
+                .attr("class", "states")
                 .attr("height", 20)
                 .attr("y", 65);
                 //.call(self.shiftChart.move, [0, self.svgWidth]);
        
-       this.svg.selectAll("rect")
+       this.svg.selectAll("rect.states")
                 .transition()
                 .duration(500)
                 .attr("width", function(d) {return d.Total_EV * widthOfOne})
@@ -108,7 +109,7 @@ class ElectoralVoteChart {
                         return colorScale(d.RD_Difference);
                 });
        
-       this.svg.selectAll("rect").exit().remove();
+       this.svg.selectAll("rect.states").exit().remove();
        
        let textData;
        
@@ -128,9 +129,8 @@ class ElectoralVoteChart {
                }
            ]
        } else {
-           console.log(this.svg.selectAll("text"));
-           if (this.svg.selectAll("text").size() == 3) {
-               this.svg.select("text").remove();
+           if (this.svg.selectAll(".numbers").size() == 3) {
+               this.svg.select(".numbers").remove();
            }
            textData = [
                {
@@ -142,25 +142,42 @@ class ElectoralVoteChart {
                }
            ]
        }
+       
     
-     this.svg.selectAll("text").data(textData)
+     this.svg.selectAll("text.numbers").data(textData)
                 .enter()
                 .append("text")
+                .attr("class", "numbers")
                 .attr("y", 60);
        
        
-       this.svg.selectAll("text")
+       this.svg.selectAll(".numbers")
                 .transition()
                 .duration(500)
-                .attr("x", function(d) {console.log(textData); return d.x})
+                .attr("x", function(d) {return d.x})
                 .text(function(d) {return d.value});
        
        
        this.svg.selectAll("g").remove();
        
-        this.svg.append("g")
+       this.svg.append("g")
                 .call(self.shiftChart.brush)
                 .call(self.shiftChart.brush.move, [0, 0].map(x));
+       
+       this.svg.append("rect")
+                .attr("x", self.svgWidth/2 - 2)
+                .attr("y", self.svgHeight/4)
+                .attr("width", 4)
+                .attr("height", self.svgHeight/2);
+       
+       this.svg.append("text")
+                .attr("class", "allVoices"); 
+       
+       this.svg.selectAll(".allVoices")
+                .text(`Electoral voite (need ${Math.ceil(sumOfAll/2)} to win)`)
+                .attr("x", self.svgWidth/2.75)
+                .attr("y", 20);
+       
        
           // ******* TODO: PART II *******
 

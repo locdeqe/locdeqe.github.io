@@ -190,4 +190,29 @@ rect.independent {
     fill: "green";
 }
 
+h2.R {
+    color: #de2d26;
+}
 
+h2.I {
+    color: #45AD6A;
+}
+
+h2.D {
+    color: #3182bd;
+}
+
+.red {
+    color: #de2d26;
+    fill: #de2d26;
+}
+
+.green {
+    color: #45AD6A;
+    fill: #45AD6A;
+}
+
+.blue {
+    color: #3182bd;
+    fill: #3182bd;
+}

@@ -99,31 +99,56 @@ class TileChart {
             /*this.legendSvg.select(".legendQuantile")
                 .call(legendQuantile);*/
 
-        //for reference:https://github.com/Caged/d3-tip
-        //Use this tool tip element to handle any hover over the chart
+            let range = ["#063e78", "#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15", "#860308"];
+            let domain = [-60, -50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50, 60];
+        
+            let widthOfOne = this.svgWidth / range.length;
+        
+            d3.select("#legend svg").selectAll("rect").data(range)
+                                .enter()
+                                .append("rect")
+                                .attr("width", widthOfOne)
+                                .attr("height", widthOfOne/4)
+                                .attr("x", function(d, i){return i*widthOfOne})
+                                .attr("y", 5)
+                                .attr("fill", function(d){return d});
+            
+            d3.select("#legend svg").selectAll("text").data(domain)
+                                .enter()
+                                .append("text")
+                                .attr("x", function(d, i){return i*widthOfOne})
+                                .attr("y", 20 + widthOfOne/4)
+                                .text(function(d, i){
+                                    if (i != 12) {
+                                        return `${domain[i]} - ${domain[i+1]}`
+                                    }
+                                });
+        
             let tip = d3.tip().attr('class', 'd3-tip')
                 .direction('se')
                 .offset(function() {
                     return [0,0];
                 })
                 .html((d)=>{
-                    /* populate data in the following format
-                     * tooltip_data = {
-                     * "state": State,
-                     * "winner":d.State_Winner
-                     * "electoralVotes" : Total_EV
-                     * "result":[
-                     * {"nominee": D_Nominee_prop,"votecount": D_Votes,"percentage": D_Percentage,"party":"D"} ,
-                     * {"nominee": R_Nominee_prop,"votecount": R_Votes,"percentage": R_Percentage,"party":"R"} ,
-                     * {"nominee": I_Nominee_prop,"votecount": I_Votes,"percentage": I_Percentage,"party":"I"}
-                     * ]
-                     * }
-                     * pass this as an argument to the tooltip_render function then,
-                     * return the HTML content returned from that method.
-                     * */
-                    return ;
+                    let allVoices = +d.D_Votes + +d.R_Votes + +d.I_Votes;                
+                    
+                    if (d.I_Nominee_prop != " ") {
+                        return `<div>
+                                    <h2 class = ${d.State_Winner}>${d.State}</h2>
+                                    <p class = "green">${d.I_Nominee_prop}: ${d.I_Votes}(${d3.format(".0%")(d.I_Votes/allVoices)})</p>
+                                    <p class = "blue">${d.D_Nominee_prop}: ${d.D_Votes}(${d3.format(".0%")(d.D_Votes/allVoices)})</p>
+                                    <p class = "red">${d.R_Nominee_prop}: ${d.R_Votes}(${d3.format(".0%")(d.R_Votes/allVoices)})</p>
+                                </div>`;
+                    }
+                    return `<div>
+                                <h2 class = ${d.State_Winner}>${d.State}</h2>
+                                <p class = "blue">${d.D_Nominee_prop}: ${d.D_Votes}(${d3.format(".0%")(d.D_Votes/allVoices)})</p>
+                                <p class = "red">${d.R_Nominee_prop}: ${d.R_Votes}(${d3.format(".0%")(d.R_Votes/allVoices)})</p>
+                            </div>`;
                 });
             this.svg.selectAll("rect").remove();
+            
+            this.svg.call(tip);
         
             this.svg.selectAll("rect")
                     .data(electionResult)
@@ -132,7 +157,9 @@ class TileChart {
                     .attr("width", rectWidth)
                     .attr("height", rectHeight)
                     .attr("x", function(d) {return parseInt(d["Space"]) * rectWidth + 2})
-                    .attr("y", function(d) {return parseInt(d["Row"]) * rectHeight + 2});
+                    .attr("y", function(d) {return parseInt(d["Row"]) * rectHeight + 2})
+                    .on('mouseover', tip.show)
+                    .on('mouseout', tip.hide);
         
         
             this.svg.selectAll("rect")

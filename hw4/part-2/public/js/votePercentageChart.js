@@ -87,29 +87,35 @@ class VotePercentageChart {
             let totalDemVoice = d3.sum(electionResult, function(d) {return d.D_Votes});
             let totalVoice = totalIndVoice + totalRepVoice + totalDemVoice;
             let max = Math.max(totalIndVoice, totalRepVoice, totalDemVoice);
-            //console.log(electionResult);
+            console.log(electionResult);
             
             let data = [totalIndVoice, totalDemVoice, totalRepVoice].map(function(obj, i){
                 let name;
+                let party;
                 switch(i){
                     case 0:
                         name = electionResult[0].I_Nominee_prop;
+                        party = "green";
                         break;
                     case 1:
                         name = electionResult[0].D_Nominee_prop;
+                        party = "blue";
                         break;
-                    case 3:
+                    case 2:
                         name = electionResult[0].R_Nominee_prop;
+                        party = "red";
                         break;
                 }
                 
                 return {
                     voices: obj,
                     percent: obj/totalVoice * 100,
+                    party: party,
                     canditate: name
                 }
             });
             
+            let self = this;
             let x = d3.scaleLinear().domain([0, 100]).range([0, this.svgWidth]);
             let xs = [0, x(data[0].percent),  x(data[0].percent) + x(data[1].percent)];
             
@@ -117,10 +123,11 @@ class VotePercentageChart {
             this.svg.selectAll("rect").data(data)
                     .enter()
                     .append("rect")
+                    .attr("class", "candidates")
                     .attr("height", 20)
                     .attr("y", 65);
         
-            this.svg.selectAll("rect")
+            this.svg.selectAll("rect.candidates")
                 .transition()
                 .duration(500)
                 .attr("x", function(d, i) {return xs[i]})
@@ -135,6 +142,55 @@ class VotePercentageChart {
                                 return "rgb(251, 106, 74)";
                         }
                 });
+        
+        
+            this.svg.append("rect")
+                    .attr("x", self.svgWidth/2 - 2)
+                    .attr("y", self.svgHeight/5)
+                    .attr("width", 4)
+                    .attr("height", self.svgHeight/2)
+                    .attr("class", "popularVoices");
+        
+            this.svg.append("text")
+                    .attr("class", "percent")
+                    .attr("x", self.svgWidth/2.25 - 20)
+                    .attr("y", 20)
+                    .text("Popular vote (50%)");
+        
+            
+        
+            this.svg.selectAll("text.name").data(data)
+                    .enter()
+                    .append("text")
+                    .attr("class", "name")
+                    .attr("y", 45);
+        
+            this.svg.selectAll("text.number").data(data)
+                    .enter()
+                    .append("text")
+                    .attr("class", "number")
+                    .attr("y", 55);
+        
+            this.svg.selectAll("text.name")
+                    .attr("x", function(d, i) {
+                            if (i != 2) { 
+                                return (xs[i] + xs[i+1]) / 3;
+                            } else if (i == 0) {
+                                return 0;
+                            } else {
+                                return xs[i] + xs[i]/2;
+                            }
+                    })
+                    .text(function(d) {return d.canditate})
+                    .attr("class", function(d) {return d.party + " name"});
+        
+            this.svg.selectAll("text.number")
+                    .attr("x", function(d, i) {return xs[i] + xs[i]/3;})
+                    .attr("class", function(d) {return d.party + " number"})
+                    .text(function(d) {
+                        if (d.percent == 0) return;
+                        return d3.format(".0%")( d.percent / 100 );
+                    });
    			  // ******* TODO: PART III *******
 
 		    //Create the stacked bar chart.

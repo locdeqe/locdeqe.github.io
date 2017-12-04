@@ -3,6 +3,10 @@
     width: 1200px;
 }
 
+div {
+    margin: 10px 0;
+}
+
 .mainCanvas {
     width: 1200px;
 }
